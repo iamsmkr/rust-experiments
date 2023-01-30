@@ -6,17 +6,17 @@ fn main() {
     let args = env::args().collect::<Vec<String>>();
 
     let config = Config::build(&args).unwrap_or_else(|err| {
-        println!("Problem parsing arguments: {err}");
+        eprintln!("Problem parsing arguments: {err}");
         process::exit(1);
     });
 
-    let Config { query, file_path } = &config;
+    let Config { query, file_path, ignore_case: _ } = &config;
 
     println!("Searching for \"{}\"", query);
     println!("In file \"{}\"", file_path);
 
     if let Err(e) = minigrep::run(config) {
-        println!("Application error: {e}");
+        eprintln!("Application error: {e}");
         process::exit(1);
     }
 }
