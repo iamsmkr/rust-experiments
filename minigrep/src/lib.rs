@@ -19,12 +19,30 @@ impl Config {
 
         Ok(Config { query, file_path, ignore_case })
     }
+
+    pub fn build_from_iter(mut args: impl Iterator<Item=String>) -> Result<Config, &'static str> {
+        args.next();
+
+        let query = match args.next() {
+            Some(v) => v,
+            None => return Err("Query string missing from the arg list")
+        };
+
+        let file_path = match args.next() {
+            Some(v) => v,
+            None => return Err("File path missing from the arg list")
+        };
+
+        let ignore_case = env::var("IGNORE_CASE").is_ok();
+
+        Ok(Config { query, file_path, ignore_case })
+    }
 }
 
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let content = fs::read_to_string(&config.file_path)?;
 
-    let Config { query, file_path: _, ignore_case} = &config;
+    let Config { query, file_path: _, ignore_case } = &config;
 
     let search_results = if *ignore_case {
         search_case_insensitive(&query, &content)
@@ -48,6 +66,12 @@ fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
         }
     }
     results
+}
+
+fn search_using_iter<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+    contents.lines()
+        .filter(|line| line.trim().contains(query))
+        .collect()
 }
 
 fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
