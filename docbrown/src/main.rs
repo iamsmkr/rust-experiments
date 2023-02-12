@@ -1,6 +1,7 @@
 use std::{
     ops::Range,
 };
+use itertools::Itertools;
 
 fn main() {
     // println!("{:?}", r_opts(0));
@@ -37,9 +38,6 @@ fn main() {
         .collect::<Vec<_>>();
 
     println!("{:?}", d);
-
-    let i =v.iter();
-    v.iter().flat_map(|_| i.copied());
 }
 
 // fn r_opts(x: i32) -> Option<Box<dyn Iterator<Item=i32>>>{
@@ -53,16 +51,3 @@ fn r_opts(v: &'static Vec<i32>) -> Option<Box<dyn Iterator<Item=&'static i32> + 
     Some(Box::new(v.iter()))
 }
 
-#[test]
-fn test_r_opts() {
-    let v = vec![0,1,2,3];
-    let itr = Box::new(v.iter());
-    let res = itr.flat_map (|x| {
-        r_opts(*x)
-    }).collect::<Vec<_>>();
-    
-    println!(
-        "{:?}",
-        res
-    )
-}

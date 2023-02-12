@@ -1,9 +1,11 @@
 [package]
-name = "docbrown"
+name = "utils"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-itertools="0.10"
+rand = "0.8.5"
+csv = "1.1.6"
+chrono = "0.4.23"
