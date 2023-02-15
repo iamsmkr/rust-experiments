@@ -1,12 +1,12 @@
 use pyo3::prelude::*;
 
 #[pyclass]
-struct ItemIterator {
+struct VertexIterator {
     iter: Box<dyn Iterator<Item = u64> + Send>,
 }
 
 #[pymethods]
-impl ItemIterator {
+impl VertexIterator {
     fn __iter__(slf: PyRef<'_, Self>) -> PyRef<'_, Self> {
         slf
     }
@@ -16,18 +16,18 @@ impl ItemIterator {
 }
 
 #[pyfunction]
-fn get_numbers() -> ItemIterator {
+fn get_vertices() -> VertexIterator {
     let i = vec![1u64, 2, 3, 4, 5].into_iter();
-    ItemIterator { iter: Box::new(i) }
+    VertexIterator { iter: Box::new(i) }
 }
 
 #[pyclass]
-struct ItemIterator2 {
+struct ItemIterator {
     iter: std::vec::IntoIter<u64>,
 }
 
 #[pymethods]
-impl ItemIterator2 {
+impl ItemIterator {
     fn __iter__(slf: PyRef<'_, Self>) -> PyRef<'_, Self> {
         slf
     }
@@ -50,8 +50,8 @@ impl Warehouse {
         }
     }
 
-    fn get_items(&self) -> ItemIterator2 {
-        ItemIterator2 {
+    fn get_items(&self) -> ItemIterator {
+        ItemIterator {
             iter: self
                 .items
                 .iter()
@@ -66,11 +66,68 @@ impl Warehouse {
 //     Box::new(self.items.iter().map(|f| *f))
 // }
 
+#[pyclass]
+struct PersonIterator {
+    iter: std::vec::IntoIter<Person>,
+}
+
+#[pymethods]
+impl PersonIterator {
+    fn __iter__(slf: PyRef<'_, Self>) -> PyRef<'_, Self> {
+        slf
+    }
+    fn __next__(mut slf: PyRefMut<'_, Self>) -> Option<Person> {
+        slf.iter.next()
+    }
+}
+
+#[pyclass]
+#[derive(Clone, Copy)]
+pub struct Person {
+    #[pyo3(get)]
+    pub id: u64,
+}
+
+impl Person {
+    fn new(id: u64) -> Person {
+        Person { id }
+    }
+}
+
+#[pyclass]
+struct People {
+    people: Vec<Person>,
+}
+
+#[pymethods]
+impl People {
+    #[new]
+    fn new() -> People {
+        People {
+            people: vec![Person::new(5), Person::new(3)],
+        }
+    }
+
+    fn getPeople(&self) -> PersonIterator {
+        PersonIterator {
+            iter: self
+                .people
+                .iter()
+                .map(|f| *f)
+                .collect::<Vec<Person>>()
+                .into_iter(),
+        }
+    }
+}
+
 #[pymodule]
 fn pyo3_example(_py: Python, m: &PyModule) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(get_numbers, m)?)?;
+    m.add_function(wrap_pyfunction!(get_vertices, m)?)?;
+    m.add_class::<VertexIterator>()?;
     m.add_class::<ItemIterator>()?;
-    m.add_class::<ItemIterator2>()?;
+    m.add_class::<PersonIterator>()?;
     m.add_class::<Warehouse>()?;
+    m.add_class::<Person>()?;
+    m.add_class::<People>()?;
     Ok(())
 }
