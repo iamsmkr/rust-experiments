@@ -1,4 +1,4 @@
-use pyo3::prelude::*;
+use pyo3::{prelude::*, types::PyType};
 
 #[pyclass]
 struct VertexIterator {
@@ -122,48 +122,58 @@ impl People {
 
 #[pyclass(subclass)]
 #[derive(Clone)]
-struct BaseClass;
+struct Prop;
 
 #[pymethods]
-impl BaseClass {
+impl Prop {
     #[new]
     fn new() -> Self {
-        BaseClass
+        Prop
     }
+
+    pub fn method(&self) {}
 }
 
-impl BaseClass {}
-
-#[pyclass(extends=BaseClass, subclass)]
+#[pyclass(extends=Prop, subclass)]
 #[derive(Clone)]
-struct SubClass {
-    value: usize,
+struct Str {
+    value: String,
 }
 
 #[pymethods]
-impl SubClass {
+impl Str {
     #[new]
-    fn new(value: usize) -> (Self, BaseClass) {
-        (SubClass { value }, BaseClass::new())
+    fn new(value: String) -> (Self, Prop) {
+        (Str { value }, Prop::new())
+    }
+
+    pub fn method(&self) {
+        println!("value = {}", self.value)
     }
 }
 
 #[pyfunction]
-fn takes_args(s: SubClass) {
-    println!("{}", s.value);
+fn print_prop(s: Prop) {
+    s.method()
+}
+
+#[pyfunction]
+fn print_str(s: Str) {
+    println!("{}", s.value)
 }
 
 #[pymodule]
 fn pyo3_example(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(get_vertices, m)?)?;
-    m.add_function(wrap_pyfunction!(takes_args, m)?)?;
+    m.add_function(wrap_pyfunction!(print_prop, m)?)?;
+    m.add_function(wrap_pyfunction!(print_str, m)?)?;
     m.add_class::<VertexIterator>()?;
     m.add_class::<ItemIterator>()?;
     m.add_class::<PersonIterator>()?;
     m.add_class::<Warehouse>()?;
     m.add_class::<Person>()?;
     m.add_class::<People>()?;
-    m.add_class::<BaseClass>()?;
-    m.add_class::<SubClass>()?;
+    m.add_class::<Prop>()?;
+    m.add_class::<Str>()?;
     Ok(())
 }
