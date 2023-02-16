@@ -120,14 +120,50 @@ impl People {
     }
 }
 
+#[pyclass(subclass)]
+#[derive(Clone)]
+struct BaseClass;
+
+#[pymethods]
+impl BaseClass {
+    #[new]
+    fn new() -> Self {
+        BaseClass
+    }
+}
+
+impl BaseClass {}
+
+#[pyclass(extends=BaseClass, subclass)]
+#[derive(Clone)]
+struct SubClass {
+    value: usize,
+}
+
+#[pymethods]
+impl SubClass {
+    #[new]
+    fn new(value: usize) -> (Self, BaseClass) {
+        (SubClass { value }, BaseClass::new())
+    }
+}
+
+#[pyfunction]
+fn takes_args(s: SubClass) {
+    println!("{}", s.value);
+}
+
 #[pymodule]
 fn pyo3_example(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(get_vertices, m)?)?;
+    m.add_function(wrap_pyfunction!(takes_args, m)?)?;
     m.add_class::<VertexIterator>()?;
     m.add_class::<ItemIterator>()?;
     m.add_class::<PersonIterator>()?;
     m.add_class::<Warehouse>()?;
     m.add_class::<Person>()?;
     m.add_class::<People>()?;
+    m.add_class::<BaseClass>()?;
+    m.add_class::<SubClass>()?;
     Ok(())
 }
