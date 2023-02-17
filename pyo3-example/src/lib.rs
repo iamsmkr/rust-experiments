@@ -152,9 +152,33 @@ impl Str {
     }
 }
 
+#[pyclass(extends=Prop, subclass)]
+#[derive(Clone)]
+struct Int {
+    value: usize,
+}
+
+#[pymethods]
+impl Int {
+    #[new]
+    fn new(value: usize) -> (Self, Prop) {
+        (Int { value }, Prop::new())
+    }
+
+    pub fn method(&self) {
+        println!("value = {}", self.value)
+    }
+}
+
+// This doesn't work! Refer: https://github.com/PyO3/pyo3/discussions/2959#discussioncomment-5000973
+// #[pyfunction]
+// fn print_prop(s: Prop) {
+//     s.method()
+// }
+
 #[pyfunction]
-fn print_prop(s: Prop) {
-    s.method()
+fn print_prop(s: &PyCell<Prop>) -> PyResult<&PyAny> {
+    s.call_method0("method")
 }
 
 #[pyfunction]
@@ -175,5 +199,6 @@ fn pyo3_example(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<People>()?;
     m.add_class::<Prop>()?;
     m.add_class::<Str>()?;
+    m.add_class::<Int>()?;
     Ok(())
 }
