@@ -3,10 +3,10 @@ from pyo3_example import Str, Int
 
 people = pyo3_example.People()
 
-for p in people.getPeople():
+for p in people.get_people():
     print(p)
 
-for p in people.getPeople():
+for p in people.get_people():
     print(p.id)
 
 
