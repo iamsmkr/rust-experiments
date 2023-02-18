@@ -1,5 +1,6 @@
 pub mod classes;
 pub mod iter;
+pub mod py_in_rust;
 
 use pyo3::prelude::*;
 
@@ -17,6 +18,8 @@ use crate::classes::Int;
 use crate::classes::Prop;
 use crate::classes::Str;
 
+use crate::py_in_rust::test_py_in_rust;
+
 #[pymodule]
 fn pyo3_example(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<VertexIterator>()?;
@@ -31,5 +34,6 @@ fn pyo3_example(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(print_prop, m)?)?;
     m.add_function(wrap_pyfunction!(print_str, m)?)?;
     m.add_function(wrap_pyfunction!(get_vertices, m)?)?;
+    m.add_function(wrap_pyfunction!(test_py_in_rust, m)?)?;
     Ok(())
 }
