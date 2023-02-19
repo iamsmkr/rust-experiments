@@ -24,8 +24,8 @@ pyo3_example.get_props({"name": "Shivam Kapoor", "age": 35, "hobbies": [1, 2, 3]
 # K = hobbies, V = Vec([1, 2, 3])
 
 
-def greet():
-    print("Hello")
+def greet(name):
+    print(f"Hello {name}")
 
 pyo3_example.invoke_passed_func(greet)
 # Hello
