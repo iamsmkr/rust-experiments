@@ -1,4 +1,5 @@
 pub mod classes;
+pub mod closure;
 pub mod iter;
 pub mod props;
 pub mod py_in_rust;
@@ -23,6 +24,8 @@ use crate::py_in_rust::test_py_in_rust;
 
 use crate::props::get_props;
 
+use crate::closure::invoke_passed_func;
+
 #[pymodule]
 fn pyo3_example(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<VertexIterator>()?;
@@ -39,5 +42,7 @@ fn pyo3_example(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(get_vertices, m)?)?;
     m.add_function(wrap_pyfunction!(test_py_in_rust, m)?)?;
     m.add_function(wrap_pyfunction!(get_props, m)?)?;
+    m.add_function(wrap_pyfunction!(invoke_passed_func, m)?)?;
+    
     Ok(())
 }
