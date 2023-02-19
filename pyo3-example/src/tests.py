@@ -17,3 +17,8 @@ pyo3_example.print_prop(s)
 i = Int(12345)
 pyo3_example.print_prop(i)
 # value = 12345
+
+pyo3_example.get_props({"name": "Shivam Kapoor", "age": 35, "hobbies": [1, 2, 3]})
+# K = name, V = String("Shivam Kapoor")
+# K = age, V = Int(35)
+# K = hobbies, V = Vec([1, 2, 3])
