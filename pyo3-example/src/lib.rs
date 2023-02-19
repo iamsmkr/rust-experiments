@@ -25,6 +25,7 @@ use crate::py_in_rust::test_py_in_rust;
 use crate::props::get_props;
 
 use crate::closure::invoke_passed_func;
+use crate::closure::invoke_passed_func3;
 
 #[pymodule]
 fn pyo3_example(_py: Python, m: &PyModule) -> PyResult<()> {
@@ -43,6 +44,7 @@ fn pyo3_example(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(test_py_in_rust, m)?)?;
     m.add_function(wrap_pyfunction!(get_props, m)?)?;
     m.add_function(wrap_pyfunction!(invoke_passed_func, m)?)?;
-    
+    m.add_function(wrap_pyfunction!(invoke_passed_func3, m)?)?;
+
     Ok(())
 }

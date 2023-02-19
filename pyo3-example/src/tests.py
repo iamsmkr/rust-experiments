@@ -28,4 +28,7 @@ def greet(name):
     print(f"Hello {name}")
 
 pyo3_example.invoke_passed_func(greet)
-# Hello
+# Pometry
+
+pyo3_example.invoke_passed_func3(greet)
+# Raphtory
