@@ -65,3 +65,21 @@ pub fn print_prop(s: &PyCell<Prop>) -> PyResult<&PyAny> {
 pub fn print_str(s: Str) {
     println!("{}", s.value)
 }
+
+// Create a struct that any python class can extend
+#[pyclass(subclass)]
+pub struct Greeter {
+    name: String,
+}
+
+#[pymethods]
+impl Greeter {
+    #[new]
+    fn new(name: String) -> Self {
+        Self { name }
+    }
+
+    fn say_hello(&self) {
+        println!("Hello {}", self.name);
+    }
+}

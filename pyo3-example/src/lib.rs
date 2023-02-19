@@ -16,6 +16,7 @@ use crate::iter::Warehouse;
 
 use crate::classes::print_prop;
 use crate::classes::print_str;
+use crate::classes::Greeter;
 use crate::classes::Int;
 use crate::classes::Prop;
 use crate::classes::Str;
@@ -38,6 +39,7 @@ fn pyo3_example(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<Prop>()?;
     m.add_class::<Str>()?;
     m.add_class::<Int>()?;
+    m.add_class::<Greeter>()?;
     m.add_function(wrap_pyfunction!(print_prop, m)?)?;
     m.add_function(wrap_pyfunction!(print_str, m)?)?;
     m.add_function(wrap_pyfunction!(get_vertices, m)?)?;
