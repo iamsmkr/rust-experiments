@@ -120,6 +120,7 @@ impl General {
 pub fn point_serde2(point: &PyCell<General>) -> PyResult<()> {
     let r: &PyAny = point.as_ref();
     println!("{:?}", point.as_ref());
+    // Refer: https://github.com/PyO3/pyo3/discussions/2967
 
     // let serialized = serde_json::to_string(r).unwrap();
     // println!("serialized = {}", serialized);
