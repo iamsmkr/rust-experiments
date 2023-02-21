@@ -14,8 +14,11 @@ use crate::iter::PersonIterator;
 use crate::iter::VertexIterator;
 use crate::iter::Warehouse;
 
+use crate::classes::point_serde;
+use crate::classes::point_serde2;
 use crate::classes::print_prop;
 use crate::classes::print_str;
+use crate::classes::General;
 use crate::classes::Greeter;
 use crate::classes::Int;
 use crate::classes::Prop;
@@ -40,6 +43,7 @@ fn pyo3_example(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<Str>()?;
     m.add_class::<Int>()?;
     m.add_class::<Greeter>()?;
+    m.add_class::<General>()?;
     m.add_function(wrap_pyfunction!(print_prop, m)?)?;
     m.add_function(wrap_pyfunction!(print_str, m)?)?;
     m.add_function(wrap_pyfunction!(get_vertices, m)?)?;
@@ -47,6 +51,8 @@ fn pyo3_example(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(get_props, m)?)?;
     m.add_function(wrap_pyfunction!(invoke_passed_func, m)?)?;
     m.add_function(wrap_pyfunction!(invoke_passed_func3, m)?)?;
+    m.add_function(wrap_pyfunction!(point_serde, m)?)?;
+    m.add_function(wrap_pyfunction!(point_serde2, m)?)?;
 
     Ok(())
 }

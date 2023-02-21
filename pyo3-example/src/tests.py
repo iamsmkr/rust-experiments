@@ -62,3 +62,22 @@ class MyGreeter(pyo3_example.Greeter):
 
 greeter = MyGreeter("Shivam")
 greeter.say_hello()
+
+
+class Point(pyo3_example.General):
+    def __new__(cls, x, y):
+        return super(Point, cls).__new__(cls)
+
+    def __init__(self, x, y) -> None:
+        self.x = x
+        self.y = y
+
+    def __repr__(self):
+        return "".join(["Point(", str(self.x), ",", str(self.y), ")"])
+
+
+print(Point(5, 4))
+
+pyo3_example.point_serde()
+pyo3_example.point_serde2(Point(3, 2))
+ 
