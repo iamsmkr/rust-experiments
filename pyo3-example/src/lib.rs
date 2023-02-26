@@ -1,6 +1,7 @@
 pub mod classes;
 pub mod closure;
 pub mod iter;
+pub mod polars;
 pub mod props;
 pub mod py_in_rust;
 
@@ -31,6 +32,10 @@ use crate::props::get_props;
 use crate::closure::invoke_passed_func;
 use crate::closure::invoke_passed_func3;
 
+use crate::polars::read_lotr;
+use crate::polars::Schema;
+use crate::polars::Vertex;
+
 #[pymodule]
 fn pyo3_example(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<VertexIterator>()?;
@@ -44,6 +49,8 @@ fn pyo3_example(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<Int>()?;
     m.add_class::<Greeter>()?;
     m.add_class::<General>()?;
+    m.add_class::<Schema>()?;
+    m.add_class::<Vertex>()?;
     m.add_function(wrap_pyfunction!(print_prop, m)?)?;
     m.add_function(wrap_pyfunction!(print_str, m)?)?;
     m.add_function(wrap_pyfunction!(get_vertices, m)?)?;
@@ -53,6 +60,7 @@ fn pyo3_example(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(invoke_passed_func3, m)?)?;
     m.add_function(wrap_pyfunction!(point_serde, m)?)?;
     m.add_function(wrap_pyfunction!(point_serde2, m)?)?;
+    m.add_function(wrap_pyfunction!(read_lotr, m)?)?;
 
     Ok(())
 }

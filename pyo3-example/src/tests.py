@@ -1,5 +1,5 @@
 import pyo3_example
-from pyo3_example import Str, Int
+from pyo3_example import Str, Int, Schema, Vertex
 
 people = pyo3_example.People()
 
@@ -81,3 +81,11 @@ print(Point(5, 4))
 pyo3_example.point_serde()
 pyo3_example.point_serde2(Point(3, 2))
  
+s = Schema(
+    Vertex(1, 1, {}),
+    Vertex(2, 3, {})
+)
+
+pyo3_example.read_lotr(s)
+
+print(s)

@@ -4,7 +4,7 @@ use reqwest::blocking::Client;
 use std::io::Cursor;
 
 fn main() -> Result<()> {
-    // sample_csv()
+    // sample_csv();
 
     read_lotr()
 }
@@ -15,6 +15,9 @@ fn read_lotr() -> Result<()> {
         .finish()?;
 
     assert!(!df.is_empty());
+
+
+    // df.col
 
     println!("{:?}", df);
 
