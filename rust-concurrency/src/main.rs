@@ -1,5 +1,7 @@
 use std::cell::{Cell, RefCell};
 use std::collections::VecDeque;
+use std::sync::atomic::AtomicI32;
+use std::sync::atomic::Ordering::Relaxed;
 use std::sync::{Condvar, Mutex};
 use std::thread;
 use std::time::Duration;
@@ -22,7 +24,11 @@ fn main() {
 
     // thread_parking();
 
-    condvar();
+    // condvar();
+
+    // atomic_progress_reporting_sleep_based();
+
+    atomic_progress_reporting_parking_based();
 }
 
 fn f() {
@@ -124,5 +130,55 @@ fn condvar() {
             non_empty.notify_one();
             thread::sleep(Duration::from_secs(1));
         }
+    });
+}
+
+fn atomic_progress_reporting_sleep_based() {
+    let num_done = AtomicI32::new(0);
+
+    thread::scope(|s| {
+        s.spawn(|| {
+            for i in 0..100 {
+                num_done.store(i + 1, Relaxed);
+                thread::sleep(Duration::from_millis(100));
+            }
+        });
+
+        loop {
+            let i = num_done.load(Relaxed);
+            if i == 100 {
+                break;
+            }
+            println!("Working.. {i}/100");
+            thread::sleep(Duration::from_secs(1));
+        }
+
+        println!("Done");
+    });
+}
+
+fn atomic_progress_reporting_parking_based() {
+    let num_done = AtomicI32::new(0);
+
+    let main_thread = thread::current();
+
+    thread::scope(|s| {
+        s.spawn(|| {
+            for i in 0..100 {
+                num_done.store(i + 1, Relaxed);
+                main_thread.unpark();
+            }
+        });
+
+        loop {
+            let i = num_done.load(Relaxed);
+            if i == 100 {
+                break;
+            }
+            println!("Working.. {i}/100");
+            thread::park_timeout(Duration::from_secs(1));
+        }
+
+        println!("Done");
     });
 }
